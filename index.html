@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="myApp.plotter">
 <head>
-    <title>Hello World, AngularJS</title>
+    <title>GPS point plotter</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-google-maps/2.1.5/angular-google-maps.min.js"></script>
@@ -14,7 +14,19 @@
         .angular-google-map-container { height: 650px; }
 
         .map-popup {
-            width: 400px;
+            width: 1000px;
+        }
+
+        footer {
+            font-size: smaller;
+        }
+
+        .legendImage {
+            height: 18px;
+        }
+
+        .legendSpan {
+            margin-right: 10px;
         }
     </STYLE>
 </head>
@@ -31,7 +43,8 @@
         <br/>
         <form-item class="form-group col-sm-12">
             <label>Please upload your csv</label>
-            <input id="loadFile" name="csvData" type="file" on-read-file="loadCSVData($fileContent)" class="form-control">
+            <input id="loadFile" name="csvData" type="file" on-read-file="loadCSVData($fileContent)" class="form-control"
+                    style="width:400px;">
         </form-item>
         <br/>
     </form>
@@ -51,13 +64,24 @@
 
     <footer>
         <h3>Legends:</h3>
-        <div>
-        <div><span >Center point: <img ng-src="{{centerIcon}}" alt="Center" /></span></div>
-        <span ng-repeat="modeIcon in modeIcons">
-            {{modeIcon.mode}}: <img ng-src="{{modeIcon.icon}}" alt="{{modeIcon.mode}}" />
-        </span>
+        <div><span>Center point: <img class="legendImage" ng-src="{{centerIcon}}" alt="Center" /></span></div>
+        <div><span class="legendSpan" ng-repeat="modeIcon in modeIcons">
+            {{modeIcon.mode}}: <img class="legendImage" ng-src="{{modeIcon.icon}}" alt="{{modeIcon.mode}}" />
+            </span>
         </div>
     </footer>
+
+    <div>
+        <h3>CSV Data</h3>
+        <table>
+            <tr>
+                <th ng-repeat="header in csvHeader">{{header}}</th>
+            </tr>
+            <tr ng-repeat="row in csv">
+                <td ng-repeat="col in row">{{col}}</td>
+            </tr>
+        </table>
+    </div>
 </body>
 <script src="index.js"></script>
 </html>

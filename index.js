@@ -19,7 +19,6 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
             {mode: "Nearest 10m for Boat", icon: "images/pink.png"}
         ];
         $scope.centerIcon="images/red.png";
-
         $scope.centerMarker = {id: -99, icon: $scope.centerIcon, coord: {}};
 
         $scope.map = { center: { latitude: -37.8, longitude: 144.9 }, zoom: 12,
@@ -28,6 +27,8 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
             }};
 
         $scope.markers = [];
+        $scope.csv = [];
+        $scope.csvHeader = [];
 
         $scope.windowOptions = {
             show: false,
@@ -38,8 +39,12 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
             return {
                 latitude: model.coord.latitude,
                 longitude: model.coord.longitude,
-                accH: model.accuracyHor,
-                time: model.time
+                horizontalAccuracy: model.horizontalAccuracy,
+                locationObjectTimestamp: model.locationObjectTimestamp,
+                currentDate: model.currentDate,
+                timeDifferenceFromModeStart: model.timeDifferenceFromModeStart,
+                timeDifferencePrevious:model.timeDifferencePrevious,
+                distanceToPrevious:model.distanceToPrevious
             }
         }
 
@@ -117,18 +122,22 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
 
         $scope.loadCSVData = function ($fileContent) {
             try {
-                var csv = d3.csv.parseRows($fileContent);
-                var header = csv.shift();
+                $scope.csv = d3.csv.parseRows($fileContent);
+                $scope.csvHeader = $scope.csv.shift();
                 $scope.markers = [];
                 var index = 1;
-                angular.forEach(csv, function(value) {
+                angular.forEach($scope.csv, function(value) {
                     var marker = {
                         id: index,
                         coord: {latitude: parseFloat(value[5]), longitude: parseFloat(value[6])},
                         icon: $scope.findIcon(value[0]),
                         mode: value[0],
-                        accuracyHor: parseFloat(value[8]),
-                        time: value[11]
+                        horizontalAccuracy: parseFloat(value[8]),
+                        currentDate: value[10],
+                        locationObjectTimestamp: value[11],
+                        timeDifferenceFromModeStart: parseFloat(value[12]),
+                        timeDifferencePrevious: parseFloat(value[13]),
+                        distanceToPrevious:  parseFloat(value[14])
                     }
 
                     this.push(marker);
