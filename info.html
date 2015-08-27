@@ -1,0 +1,16 @@
+<div class='map-popup'>
+    <div ng-repeat="record in parameter.data">
+        <h5>{{record.mode}} ({{record.points.length}})</h5>
+        <!--<div ng-repeat="point in record.points">-->
+<!--<pre>{{point | json}}</pre>-->
+        <!--</div>-->
+        <table>
+            <tr>
+                <th ng-repeat="(key, value) in record.points[0]">{{key}}</th>
+            </tr>
+            <tr ng-repeat="point in record.points">
+                <td ng-repeat="(key, value) in point">{{value}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
