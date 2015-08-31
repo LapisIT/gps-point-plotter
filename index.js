@@ -16,7 +16,8 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
             {mode: "Best for walk - No Nav", icon: "images/darkgreen.png"},
             {mode: "Best for Boat - No Nav", icon: "images/brown.png"},
             {mode: "Nearest 10m for Walk", icon: "images/orange.png"},
-            {mode: "Nearest 10m for Boat", icon: "images/pink.png"}
+            {mode: "Nearest 10m for Boat", icon: "images/pink.png"},
+            {mode: "Wrapper based location", icon: "images/green.png"}
         ];
         $scope.centerIcon="images/red.png";
         $scope.centerMarker = {id: -99, icon: $scope.centerIcon, coord: {}};
@@ -49,7 +50,7 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
         }
 
         $scope.findIcon = function(mode) {
-            var result = "images/purple_MarkerA.png"
+            var result = "images/unknown.png"
             $scope.modeIcons.forEach(function(element, index, array) {
                 if (mode == element.mode) {
                     result = element.icon;
@@ -120,11 +121,20 @@ angular.module('myApp.plotter', ['uiGmapgoogle-maps'])
             $scope.markers.push($scope.centerMarker);
         }
 
+        $scope.reset = function() {
+            var path = location.href.toString(),
+                path = path.substring(0, path.indexOf('?'));
+            location.href = path;
+        }
+
+        $scope.isMapCentered = function() {
+            return $scope.markers.length>0;
+        }
+
         $scope.loadCSVData = function ($fileContent) {
             try {
                 $scope.csv = d3.csv.parseRows($fileContent);
                 $scope.csvHeader = $scope.csv.shift();
-                $scope.markers = [];
                 var index = 1;
                 angular.forEach($scope.csv, function(value) {
                     var marker = {
